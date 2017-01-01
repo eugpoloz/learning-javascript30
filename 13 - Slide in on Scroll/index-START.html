@@ -56,27 +56,24 @@
         timeout = setTimeout(later, wait);
         if (callNow) func.apply(context, args);
       };
-    }
+    } //pasted from the internet, no biggie
 
     const sliderImages = document.querySelectorAll('.slide-in');
 
     function checkSlide(e) {
       sliderImages.forEach(sliderImage => {
         // half way through the image
-        const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2;
+        const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2; // () - pixel level at where you're at
+        // also, if something changes, we'd need to recalculate, so better this way!
         // bottom of the image
         const imageBottom = sliderImage.offsetTop + sliderImage.height;
         const isHalfShown = slideInAt > sliderImage.offsetTop;
         const isNotScrolledPast = window.scrollY < imageBottom;
-        if (isHalfShown && isNotScrolledPast) {
-          sliderImage.classList.add('active');
-        } else {
-          sliderImage.classList.remove('active');
-        }
+        (isHalfShown && isNotScrolledPast) ? sliderImage.classList.add('active') : sliderImage.classList.remove('active');
       });
     }
 
-    window.addEventListener('scroll', debounce(checkSlide));
+    window.addEventListener('scroll', debounce(checkSlide)); //we will only run this function every other second! => checkSlide is gonna be run once every 20 sec; it should always be considered when eventListener is scroll
 
   </script>
 
