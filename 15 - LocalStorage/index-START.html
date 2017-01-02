@@ -22,13 +22,73 @@
     <form class="add-items">
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
+      <div class="btn__container">
+        <a href="#" class="btn btn_heart"> Heart All </a>
+        <a href="#" class="btn btn_unheart"> Unheart All </a>
+      </div>
     </form>
   </div>
 
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || []; //empty array is a fallback if localStorage.items does not exist
+
+  function addItem(e) {
+  	e.preventDefault();
+  	const text = (this.querySelector('[name=item]')).value;
+  	const item = {
+  		text, //es6 shorthand for text: text! fucking awesome
+  		done: false
+  	}
+  	items.push(item);
+  	populateList(items, itemsList);
+  	localStorage.setItem('items', JSON.stringify(items)); //set localStorage; you can use only strings, and not strings are implicitly converted! So we need to JSON.stringify
+  	this.reset();
+  }
+
+  // every time we add an item, this function runs; but it's recreating an entire list!
+  function populateList(plates = [], platesList) { // we need an empty array for js to not fail if there's nothing to run!
+  	platesList.innerHTML = plates.map((plate, i) => {
+  		return `
+  			<li>
+	  			<input type="checkbox" data-index=${i} id="item${i}" ${plate.done && 'checked'} />
+  				<label for="item${i}">${plate.text}</label>
+  			</li>
+  		`;
+  	}).join('');
+  } // to re-render just one item, it's better to use React or Angular
+
+  function toggleDone(e) {
+  	if (!e.target.matches('input')) return; //skip unless it's an input!
+  	// we can use data-index as a reference!
+  	const el = e.target;
+  	const index = el.dataset.index;
+  	items[index].done = !items[index].done; // toggle done
+  	localStorage.setItem('items', JSON.stringify(items)); //set localStorage
+	populateList(items, itemsList); // update what's on page
+  }
+
+  //function for selecting and deselecting
+  function selectAll(e) {
+    e.preventDefault();
+    const inputsList = itemsList.querySelectorAll('input');
+    const heartIt = e.target.classList.contains('btn_heart'); //if the button is "Heart All"...
+
+    inputsList.forEach(input => heartIt ? input.setAttribute('checked', '') : input.removeAttribute('checked'));
+    items.forEach(item => heartIt ? item.done = true : item.done = false);
+
+  	localStorage.setItem('items', JSON.stringify(items)); //set localStorage
+	populateList(items, itemsList); // update what's on page
+  }
+
+  addItems.addEventListener('submit', addItem); //we cover all of our bases listening to 'submit'
+  itemsList.addEventListener('click', toggleDone);  //we need to listen to element that always exists in DOM and delegate the event from it
+  document.querySelectorAll('.btn').forEach(btn => btn.addEventListener('click', selectAll)); //event listener for selecting and deselecting buttons
+
+  populateList(items, itemsList);
+
+  //create buttons - click all/check all & uncheck all!
 
 </script>
 
