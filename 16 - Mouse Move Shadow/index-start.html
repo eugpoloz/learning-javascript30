@@ -31,6 +31,33 @@
   </style>
 
 <script>
+  const hero = document.querySelector('.hero');
+  const text = hero.querySelector('h1');
+  const walk = 200; // 100px
+
+  function shadow(e) {
+    // const width = hero.offsetWidth;
+    // const height = hero.offsetHeight;
+    const { offsetWidth: width, offsetHeight: height } = hero; //this is ES6 destructuring and it's equal to commented lines 38 and 39
+    let { offsetX: x, offsetY: y } = e;
+
+    if (this !== e.target) {
+      x = x + e.target.offsetLeft;
+      y = y + e.target.offsetTop;
+    } // because offset counts from the actual element we hover over, we need to fix it to offset from e.target; this is the best way to do it
+
+    const xWalk = Math.round((x / width * walk) - (walk / 2)); // if 100 is walk, we go from 50 to -50
+    const yWalk = Math.round((y / height * walk) - (walk / 2));
+
+    text.style.textShadow = `
+      ${xWalk}px ${yWalk}px 0px hsla(1, 100%, 53%, 0.25),
+      ${xWalk * -1}px ${yWalk}px 0px hsla(1, 0%, 53%, 0.25),
+      ${yWalk}px ${xWalk * -1}px 0px hsla(1, 50%, 53%, 0.25),
+      ${yWalk * -1}px ${xWalk}px 0px hsla(1, 50%, 21.5%, 0.25)
+    `;
+  }
+
+  hero.addEventListener('mousemove', shadow);
 </script>
 </body>
 </html>
