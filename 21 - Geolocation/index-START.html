@@ -57,16 +57,18 @@
     /*Compass: https://thenounproject.com/search/?q=compass&i=592352*/
   </style>
   <script>
+    // I don't have a Mac, so I can't really do anything. T.T
+
     const arrow = document.querySelector('.arrow');
     const speed = document.querySelector('.speed-value');
 
+    //.getCurrentPosition gets only one, .watchPosition is the way to go if you need to track it
     navigator.geolocation.watchPosition((data) => {
-      console.log(data);
       speed.textContent = data.coords.speed;
       arrow.style.transform = `rotate(${data.coords.heading}deg)`;
     }, (err) => {
       console.err(err);
-      alert('HEY! YOU GOTTA ALLOW THAT TO HAPPEN!!!');
+      alert('Geolocation is not allowed, bro!');
     });
 
   </script>
