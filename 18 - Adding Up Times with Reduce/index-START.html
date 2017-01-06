@@ -182,6 +182,33 @@
     </li>
 
 <script>
+
+  const timeNodes = Array.from(document.querySelectorAll('[data-time]')); // because it might not be <li>! 
+
+  const seconds = timeNodes
+    // .map(node => {
+    // 	const timeCode = node.dataset.time;
+    //   const [mins, secs] = timeCode.split(':').map(parseFloat); //destructuring w/ ES6 and turning to actual numbers instead of strings
+    //   console.log((mins * 60) + secs);
+    //   return (mins * 60) + secs;
+    // })
+    // .reduce((total, vidSeconds) => total + vidSeconds);
+    // this can also be done in a single reduce()! which I did here:
+    .reduce((total, node) => {
+    	const timeCode = node.dataset.time;
+      const [mins, secs] = timeCode.split(':').map(parseFloat);
+      const vidSeconds = (mins * 60) + secs;
+      return total + vidSeconds;
+    }, 0); // 0 is for the initial value of total, of course
+
+    let secondsLeft = seconds;
+    const hours = Math.floor(secondsLeft / 3600);
+    secondsLeft = secondsLeft % 3600;
+
+    const mins = Math.floor(secondsLeft / 60);
+    secondsLeft = secondsLeft % 60;
+
+    console.log(`Total time: ${hours}:${mins}:${secondsLeft}`); // template strings are AWESOMMMME
 </script>
 </body>
 </html>
