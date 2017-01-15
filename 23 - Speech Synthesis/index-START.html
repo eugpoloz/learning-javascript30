@@ -29,12 +29,49 @@
     </div>
 
 <script>
-  const msg = new SpeechSynthesisUtterance();
-  let voices = [];
+  const msg = new SpeechSynthesisUtterance(); // it means what's person in going to say, how fast, in what pitch it's in, and what's the voice
+  let voices = []; // arr of our voices
   const voicesDropdown = document.querySelector('[name="voice"]');
   const options = document.querySelectorAll('[type="range"], [name="text"]');
   const speakButton = document.querySelector('#speak');
   const stopButton = document.querySelector('#stop');
+  msg.text = document.querySelector('[name="text"]').value;
+
+  // this can't be called on page load, we need to wait a little
+  function populateVoices() {
+    voices = this.getVoices();
+    voicesDropdown.innerHTML = voices
+      .filter(voice => voice.lang.includes('en'))
+      .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`)
+      .join('');
+  }
+
+  function toggle(startOver = true) { // flag to know to start it again
+    speechSynthesis.cancel(); // stops speaking
+    if(startOver) {
+      speechSynthesis.speak(msg);
+    }
+  }
+
+  function setVoice() {
+    msg.voice = voices.find(voice => voice.name === this.value); // loops over the array and finds one which name is equal to the value
+    toggle();
+  }
+
+  function setOption() {
+    msg[this.name] = this.value;
+    toggle();
+  }
+
+  speechSynthesis.addEventListener('voiceschanged', populateVoices);
+  voicesDropdown.addEventListener('change', setVoice);
+  options.forEach(option => option.addEventListener('change', setOption));
+
+  speakButton.addEventListener('click', toggle);
+  // toggle(false) is not working; you can bind it like this 
+  // stopButton.addEventListener('click', toggle.bind(null, false));
+  // or do an arrow function
+  stopButton.addEventListener('click', () => toggle(false));
 </script>
 
 </body>
