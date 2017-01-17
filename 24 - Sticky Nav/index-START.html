@@ -55,14 +55,14 @@
 
 <script>
   const nav = document.querySelector('#main');
-  const topOfNav = nav.offsetTop;
+  const topOfNav = nav.offsetTop; 
 
   function fixNav() {
     if(window.scrollY >= topOfNav) {
-      document.body.style.paddingTop = nav.offsetHeight + 'px';
       document.body.classList.add('fixed-nav');
+      document.body.style.paddingTop = nav.offsetHeight + 'px'; // taking care of extra space; it's better to take the height in programmatically instead of hard-coding (duh)
     } else {
-      document.body.style.paddingTop = 0;
+      document.body.style.paddingTop = 0; // ... and then reset when nav pops back into DOM and occupies its space agasin
       document.body.classList.remove('fixed-nav');
     }
   }
