@@ -35,10 +35,10 @@
 
   		if (transcript.includes('get the weather')) {
   			console.log('Getting the weather...')
-  		}
+  		} // crazy stuff!
   });
 
-  recognition.addEventListener('end', recognition.start);
+  recognition.addEventListener('end', recognition.start); // need to rehook because otherwise result unbinds itself after isFinal = true
 
   recognition.start();
 </script>

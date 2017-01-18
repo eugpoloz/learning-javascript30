@@ -39,7 +39,34 @@
 
 <button></button>
 <script>
+	const divs = document.querySelectorAll('div');
+	const button = document.querySelector('button');
 
+	function logText(e) {
+		console.log(this.classList.value);
+		// outputs one & two & three
+		// e.stopPropagation(); // stops bubbling - outputs the exact element from the very lowest one
+	}
+
+	// document.body.addEventListener('click', logText);
+	// outputs one & two & three & also bod
+
+	/* capture - when you click on the element, it ripples from the top down, captures all events, and bubbles it up (= triggers it)
+	*/
+
+	divs.forEach(div => div.addEventListener('click', logText, {
+		capture: false,
+		// true runs the function from up to down
+		// false (down to up) by default
+		once: true
+		// unbinds itself after a single click
+	}));
+
+	button.addEventListener('click', () => {
+		console.log('Clicked!');
+	}, {
+		once: true // useful for store checkouts!
+	});
 </script>
 </body>
 </html>
